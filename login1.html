@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
@@ -133,11 +134,30 @@
         #resetBtn:hover {
             background: #0056b3;
         }
+        #backBtn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 8px 12px;
+    background-color: #fffb00;
+    color:black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 20;
+}
+
+#backBtn:hover {
+    background-color: #0056b3;
+}
+
        
     </style>
 </head>
 <body>
-   
+   <button id="backBtn">&#8592; Back</button>
+
     <div class="login-container">
         <h2>Login</h2>
         <form id="loginForm">
@@ -172,7 +192,7 @@
     <script>
         // Sample user data
         const users = {
-             "testUser": "testPassword",
+            "testUser": "testPassword",
             "newUser": "newPassword123",
             "rauhiaabdallah43@gmail.com": "12345",
             "admin": "1234"
@@ -198,7 +218,7 @@
   
 
                 setTimeout(() => {
-                    window.location.href = "https://mail.google.com/mail/u/4/#inbox";
+                    window.location.href = "https://script.google.com/macros/s/AKfycbyoMdrgqwPwpfllvEwNlo2EJhv1pF4bBE4DtU8IoHJEr6HB3ZFwHFXcXm9d-ZNvm7KV1Q/exec";
                 }, 1000);
             } else {
                 messageElement.style.color = "red";
@@ -243,6 +263,10 @@
         event.preventDefault();
         alert("Form submitted successfully!");
       }
+      document.getElementById("backBtn").onclick = () => {
+    window.history.back();
+};
+
     </script>
 </body>
 </html>
