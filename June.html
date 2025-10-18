@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zimamoto/Maafa — June 2025</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .navbar {
+      background-color: #b30000;
+    }
+    .navbar a, .navbar-brand, .dropdown-item {
+      color: white !important;
+    }
+    .card {
+      border-radius: 15px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    /* Make Google Charts table text black */
+#table_div table {
+  color: black !important;
+  font-weight: 500;
+}
+#table_div table th {
+  background-color: #f2f2f2 !important;
+  color: black !important;
+  font-weight: bold !important;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- 🌐 Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">Zimamoto/Maafa Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" href="January.html">January</a></li>
+          <li class="nav-item"><a class="nav-link" href="February.html">February</a></li>
+          <li class="nav-item"><a class="nav-link" href="March.html">March</a></li>
+          <li class="nav-item"><a class="nav-link" href="April.html">April</a></li>
+          <li class="nav-item"><a class="nav-link" href="May.html">May</a></li>
+          <li class="nav-item"><a class="nav-link" href="June.html">June</a></li>
+          <li class="nav-item"><a class="nav-link" href="July.html">July</a></li>
+          <li class="nav-item"><a class="nav-link" href="August.html">August</a></li>
+          <li class="nav-item"><a class="nav-link" href="September.html">September</a></li>
+          <li class="nav-item"><a class="nav-link" href="October.html">October</a></li>
+          <li class="nav-item"><a class="nav-link" href="November.html">November</a></li>
+          <li class="nav-item"><a class="nav-link" href="December.html">December</a></li>
+        </ul>
+
+        <!-- Year Dropdown -->
+        <form class="d-flex">
+          <select class="form-select form-select-sm me-2">
+            <option selected>2025</option>
+            <option>2026</option>
+          </select>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 🧾 Summary Cards -->
+  <div class="container my-4">
+    <div class="row text-center">
+      <div class="col-md-4 mb-3">
+        <div class="card bg-danger text-white p-3">
+          <h5>Jumla ya Ajali kwa Mkoa</h5>
+          <h2 id="totalMkoa">0</h2>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card bg-warning text-dark p-3">
+          <h5>Jumla ya Ajali kwa Wilaya</h5>
+          <h2 id="totalWilaya">0</h2>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card bg-success text-white p-3">
+          <h5>Jumla ya Aina za Ajali</h5>
+          <h2 id="totalAina">0</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 📊 Charts Section -->
+  <div class="container p-4" style="background-color: #b30000; color: white; font-size: larger; border-radius: 10px;">
+    <h2 class="text-center mb-4">Charts Zimamoto/Maafa — June 2025</h2>
+
+    <div class="mb-5">
+      <h4>Idadi ya Ajali kwa Mkoa</h4>
+      <div id="chart_div" style="height: 400px;"></div>
+    </div>
+
+    <div class="mb-5">
+      <h4>Idadi ya Ajali kwa Wilaya</h4>
+      <div id="pie_chart" style="height: 400px;"></div>
+    </div>
+
+    <div class="mb-5">
+      <h4>Aina za Ajali na Idadi Zake</h4>
+      <div id="table_div"></div>
+    </div>
+  </div>
+
+  <!-- 📈 Google Charts Script -->
+  <script type="text/javascript">
+    google.charts.load('current', {'packages':['corechart', 'bar', 'table']});
+    google.charts.setOnLoadCallback(drawAllCharts);
+
+    function drawAllCharts() {
+      drawMotivationChart();
+      drawPieChart();
+      drawTable();
+      updateTotals();
+    }
+
+    // Column Chart — Ajali kwa Mkoa
+    function drawMotivationChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Mkoa', 'Idadi ya Ajali'],
+        ['Kaskazini Pemba', 5],
+        ['Kaskazini Unguja', 7],
+        ['Kusini Pemba', 3],
+        ['Kusini Unguja', 6],
+        ['Mjini Magharibi', 17]
+      ]);
+
+      var options = {
+        title: 'Idadi ya Ajali kwa Mkoa',
+        hAxis: { title: 'Mkoa' },
+        vAxis: { title: 'Idadi ya Ajali', minValue: 0 },
+        legend: { position: 'none' },
+        colors: ['#ffc107']
+      };
+
+      var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+    }
+
+    // Pie Chart — Ajali kwa Wilaya
+    function drawPieChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Wilaya', 'Idadi ya Ajali'],
+        ['Wilaya ya Kaskazini A', 2],
+        ['Wilaya ya Chake Chake', 2],
+        ['Wilaya ya Kaskazini B', 5],
+        ['Wilaya ya Kusini', 6],
+        ['Wilaya ya Magharibi A', 5],
+        ['Wilaya ya Magharibi B', 3],
+        ['Wilaya ya Micheweni', 2],
+        ['Wilaya ya Mjini', 8],
+        ['Wilaya ya Kati', 1],
+        ['Wilaya ya Wete', 4]
+      ]);
+
+      var options = {
+        title: 'Idadi ya Ajali kwa Wilaya',
+        is3D: true,
+        pieSliceText: 'percentage'
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('pie_chart'));
+      chart.draw(data, options);
+    }
+
+    // Table — Aina za Ajali
+  function drawTable() {
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Aina za Ajali');
+  data.addColumn('number', 'Idadi za Ajali');
+  data.addRows([
+    ['Kungua nyumba na majengo ya Taasisi', 11],
+    ['Kuungua kwa hoteli', 5],
+    ['Ajali za ndege', 0],
+    ['Moto wa sheli', 0],
+    ['Moto wa transfoma na nguzo za umeme', 4],
+    ['Moto wa misitu na mashamba', 3],
+    ['Ajali za gari/moto wa gari/pikipiki', 6],
+    ['Ajali za meli/jahazi', 0],
+    ['Moto wa jaa', 2],
+    ['Matukio ya miti kuanguka na kuziba njia', 4],
+    ['Kujinyonga', 0],
+    ['Watu/wanyama waliyozama baharini, visima n.k.', 2],
+    ['Moto sehemu za biashara (maduka, masoko)', 1],
+    ['Matukio ya uongo', 0],
+    ['Mengineyo', 0]
+  ]);
+
+  var table = new google.visualization.Table(document.getElementById('table_div'));
+  table.draw(data, { showRowNumber: true, width: '100%', height: '100%' });
+}
+
+    // Totals for Cards
+    function updateTotals() {
+      const mikoa = [5, 7, 3, 6, 17];
+      const wilaya = [2, 2, 5, 6, 5, 3, 2, 8, 1, 4];
+      const aina = [11,5,0,0,4,3,6,0,2,4,0,2,1,0,0]; // fixed to 15 values
+
+      document.getElementById('totalMkoa').innerText = mikoa.reduce((a,b)=>a+b,0);
+      document.getElementById('totalWilaya').innerText = wilaya.reduce((a,b)=>a+b,0);
+      document.getElementById('totalAina').innerText = aina.reduce((a,b)=>a+b,0);
+    }
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
