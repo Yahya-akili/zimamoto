@@ -132,11 +132,11 @@
     function drawMotivationChart() {
       var data = google.visualization.arrayToDataTable([
         ['Mkoa', 'Idadi ya Ajali'],
-        ['Kaskazini Pemba', 5],
-        ['Kaskazini Unguja', 7],
+        ['Kaskazini Pemba', 6],
+        ['Kaskazini Unguja', 1],
         ['Kusini Pemba', 3],
-        ['Kusini Unguja', 6],
-        ['Mjini Magharibi', 17]
+        ['Kusini Unguja', 10],
+        ['Mjini Magharibi', 21]
       ]);
 
       var options = {
@@ -155,15 +155,15 @@
     function drawPieChart() {
       var data = google.visualization.arrayToDataTable([
         ['Wilaya', 'Idadi ya Ajali'],
-        ['Wilaya ya Kaskazini A', 2],
-        ['Wilaya ya Chake Chake', 2],
-        ['Wilaya ya Kaskazini B', 5],
+        ['Wilaya ya Kaskazini A', 1],
+        ['Wilaya ya ChakeChake', 3],
+        ['Wilaya ya Kaskazini B', 0],
         ['Wilaya ya Kusini', 6],
-        ['Wilaya ya Magharibi A', 5],
-        ['Wilaya ya Magharibi B', 3],
+        ['Wilaya ya Magharibi A', 4],
+        ['Wilaya ya Magharibi B', 9],
         ['Wilaya ya Micheweni', 2],
         ['Wilaya ya Mjini', 8],
-        ['Wilaya ya Kati', 1],
+        ['Wilaya ya Kati', 4],
         ['Wilaya ya Wete', 4]
       ]);
 
@@ -183,21 +183,21 @@
   data.addColumn('string', 'Aina za Ajali');
   data.addColumn('number', 'Idadi za Ajali');
   data.addRows([
-    ['Kungua nyumba na majengo ya Taasisi', 11],
-    ['Kuungua kwa hoteli', 5],
+    ['Kungua nyumba na majengo ya Taasisi', 14],
+    ['Kuungua kwa hoteli', 3],
     ['Ajali za ndege', 0],
     ['Moto wa sheli', 0],
-    ['Moto wa transfoma na nguzo za umeme', 4],
-    ['Moto wa misitu na mashamba', 3],
-    ['Ajali za gari/moto wa gari/pikipiki', 6],
+    ['Moto wa transfoma na nguzo za umeme', 3],
+    ['Moto wa misitu na mashamba', 4],
+    ['Ajali za gari/moto wa gari/pikipiki', 5],
     ['Ajali za meli/jahazi', 0],
-    ['Moto wa jaa', 2],
-    ['Matukio ya miti kuanguka na kuziba njia', 4],
+    ['Moto wa jaa', 6],
+    ['Matukio ya miti kuanguka na kuziba njia', 1],
     ['Kujinyonga', 0],
-    ['Watu/wanyama waliyozama baharini, visima n.k.', 2],
+    ['Watu/wanyama waliyozama baharini, visima n.k.', 3],
     ['Moto sehemu za biashara (maduka, masoko)', 1],
     ['Matukio ya uongo', 0],
-    ['Mengineyo', 0]
+    ['Mengineyo', 1]
   ]);
 
   var table = new google.visualization.Table(document.getElementById('table_div'));
@@ -206,9 +206,9 @@
 
     // Totals for Cards
     function updateTotals() {
-      const mikoa = [5, 7, 3, 6, 17];
-      const wilaya = [2, 2, 5, 6, 5, 3, 2, 8, 1, 4];
-      const aina = [11,5,0,0,4,3,6,0,2,4,0,2,1,0,0]; // fixed to 15 values
+      const mikoa = [6, 1, 3, 10, 21];
+      const wilaya = [1, 3, 0, 6, 4, 9, 2, 8, 4, 4];
+      const aina = [14, 3, 0, 0, 3, 4, 5, 0, 6, 1, 0, 3, 1, 0, 1]; // fixed to 15 values
 
       document.getElementById('totalMkoa').innerText = mikoa.reduce((a,b)=>a+b,0);
       document.getElementById('totalWilaya').innerText = wilaya.reduce((a,b)=>a+b,0);
