@@ -109,7 +109,7 @@
     function drawMotivationChart(){
       const data = google.visualization.arrayToDataTable([
         ['Mkoa','Idadi ya Ajali'],
-        ['Kaskazini Pemba',1],
+        ['Kaskazini Pemba',2],
         ['Kaskazini Unguja',9],
         ['Kusini Pemba',2],
         ['Kusini Unguja',6],
@@ -124,14 +124,14 @@
         ['Wilaya','Idadi ya Ajali'],
         ['Wilaya ya Kaskazini A',2],
         ['Wilaya ya ChakeChake',1],
-        ['Wilaya ya Kaskazini B',1],
+        ['Wilaya ya Kaskazini B',2],
         ['Wilaya ya Kusini',4],
         ['Wilaya ya Magharibi A',12],
         ['Wilaya ya Magharibi B',10],
         ['Wilaya ya Micheweni',1],
         ['Wilaya ya Mjini',24],
         ['Wilaya ya Kati',1],
-        ['Wilaya ya Wete',1]
+        ['Wilaya ya Wete',2]
       ]);
       const options={title:'Idadi ya Ajali kwa Wilaya',is3D:true,pieSliceText:'percentage'};
       new google.visualization.PieChart(document.getElementById('pie_chart')).draw(data,options);
@@ -150,7 +150,7 @@
         ['Moto wa misitu na mashamba',0],
         ['Ajali za gari/moto wa gari/pikipiki',4],
         ['Ajali za meli/jahazi',0],
-        ['Moto wa jaa',1],
+        ['Moto wa jaa',2],
         ['Matukio ya miti kuanguka na kuziba njia',3],
         ['Kujinyonga',0],
         ['Watu/wanyama waliyozama baharini, visima n.k',3],
@@ -162,7 +162,7 @@
     }
 
     function updateTotals(){
-      const mikoa=[1,9,2,6,40], wilaya=[2,2,1,4,12,10,1,24,1,1], aina=[21,5,0,0,16,0,4,0,1,3,0,3,5,0,0];
+      const mikoa=[1,9,3,6,40], wilaya=[2,3,1,4,12,10,1,24,1,1], aina=[21,6,0,0,16,0,4,0,1,3,0,3,5,0,0];
       document.getElementById('totalMkoa').innerText=mikoa.reduce((a,b)=>a+b,0);
       document.getElementById('totalWilaya').innerText=wilaya.reduce((a,b)=>a+b,0);
       document.getElementById('totalAina').innerText=aina.reduce((a,b)=>a+b,0);
