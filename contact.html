@@ -1,99 +1,808 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title> Zimamoto</title>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript" src="dist/pickmeup.min.js"></script>
-    <script type="text/javascript" src="dist/handleCounter.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/pickmeup.css">
-    <link rel="stylesheet" type="text/css" href="css/handle-counter.min.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-    <script type="text/javascript" src="dist/jquery.scrollUp.js"></script>
-     <script type="text/javascript" src="dist/demo.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zimamoto</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3tO4SQlk9ZVpuhRXlmNfYh37e63-Li2k&callback=initMap">
-    </script>
+        :root {
+            --primary-red: #C12B2B;
+            --dark-red: #A51C1C;
+            --light-red: #F5D5D5;
+            --dark-gray: #333333;
+            --medium-gray: #666666;
+            --light-gray: #F5F5F5;
+            --accent-yellow: #FFD700;
+            --white: #FFFFFF;
+        }
 
- 
-    
-    </head>
-    
+        body {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        /* Section A: Header with Logo */
+        .header-section {
+            background-color: var(--primary-red);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+        .header-section {
+            justify-content: space-between;
+        }
+
+        .right-logo img {
+            height: 150px;
+            width: auto;
+            object-fit: contain;
+        }
+
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo-icon {
+            font-size: 3.5rem;
+            color: var(--accent-yellow);
+        }
+
+        .header-text h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.3rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-text p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Main layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Section B: Sidebar Menu */
+        .sidebar-section {
+            width: 220px;
+            background-color: var(--dark-gray);
+            padding: 2rem 0;
+            flex-shrink: 0;
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--white);
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left-color: var(--primary-red);
+            color: var(--accent-yellow);
+        }
+
+        .menu-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main content area */
+        .content-section {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        /* Section C: Contact Us (Replaced Slideshow) */
+        .contact-section {
+            margin-bottom: 2.5rem;
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-red);
+            margin-bottom: 2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-red);
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .contact-icon {
+            background-color: var(--light-red);
+            color: var(--primary-red);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .contact-details h3 {
+            color: var(--dark-red);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .contact-details p {
+            color: var(--medium-gray);
+            margin-bottom: 0.3rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 2px rgba(193, 43, 43, 0.1);
+        }
+
+        .submit-btn {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--dark-red);
+        }
+
+        .map-container {
+            margin-top: 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-frame {
+            width: 100%;
+            height: 300px;
+            border: none;
+        }
+
+        .map-header {
+            background-color: var(--primary-red);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .map-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .map-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .map-link {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.3rem 0.8rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .map-link:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .emergency-box {
+            background-color: var(--light-red);
+            border-left: 4px solid var(--primary-red);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-radius: 4px;
+        }
+
+        .emergency-box h3 {
+            color: var(--dark-red);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Section D: Cards */
+        .cards-section {
+            margin-bottom: 3rem;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            color: var(--dark-red);
+            margin-bottom: 0.8rem;
+        }
+
+        /* Section E: Footer */
+        .footer-section {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 2.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column h3 {
+            color: var(--accent-yellow);
+            margin-bottom: 1.2rem;
+            font-size: 1.3rem;
+        }
+
+        .contact-info-list {
+            list-style: none;
+        }
+
+        .contact-info-list li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .footer-icon {
+            color: var(--primary-red);
+            font-size: 1.2rem;
+            width: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--medium-gray);
+            color: var(--white);
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .social-icon:hover {
+            background-color: var(--primary-red);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            width: 100%;
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--medium-gray);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar-section {
+                width: 100%;
+                padding: 0;
+            }
+
+            .menu {
+                display: flex;
+                justify-content: space-around;
+            }
+
+            .menu-item {
+                margin-bottom: 0;
+                flex: 1;
+            }
+
+            .menu-link {
+                justify-content: center;
+                border-left: none;
+                border-bottom: 4px solid transparent;
+                padding: 1rem 0.5rem;
+            }
+
+            .menu-link:hover, .menu-link.active {
+                border-left-color: transparent;
+                border-bottom-color: var(--primary-red);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                padding: 1rem;
+            }
+
+            .logo-icon {
+                font-size: 2.5rem;
+            }
+
+            .header-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .contact-section {
+                padding: 2rem;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-column {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .menu {
+                flex-wrap: wrap;
+            }
+
+            .menu-item {
+                flex: 1 0 50%;
+            }
+
+            .contact-section {
+                padding: 1.5rem;
+            }
+
+            .contact-method {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .contact-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
 <body>
-      <header class="tm-header">
-        <img class="tm-logo" src="logo.png" alt="logo zimamoto">
-        <nav class="tm-nav" >
-       <div>
-            <ul>
-                <li class="tm-list"><a href="index.html">Home</a></li>
-                <li class="tm-list"><a href="explore.html">Galaxy</a></li>
-                <li class="tm-list"><a href="login1.html">Statistics</a></li>
-                <li class="tm-list"><a href="login.html">Fire Resque Form</a></li>
-                <li><a href="contact.html">Contact Us</a></li>
-            </ul>    
-            </div>
-        </nav>
-    </header>
-    <br>
-    
-    <section class="tm-main">
-           <p>Contact</p>
-    </section>
-    <br>
-    
-    
-    <section class="tm-booking">
-    
-    <form action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="91147736-1ef6-4bb4-b5a9-d2c66d43a372">
-        <div class="tm-form1">
-    <input type="text" name="name" placeholder="Name">  
-    <input type="email" name="email" placeholder="E-mail"> 
-            <textarea  placeholder="Your message..." rows="4" ></textarea>
-   
-            <input type="submit" id="sub2" value="Send">
-            
+    <!-- Section A: Header with Logo -->
+    <header class="header-section">
+    <div class="logo-container">
+        <div class="logo-icon">
+            <i class="fas fa-fire-extinguisher"></i>
+        </div>
+        <div class="header-text">
+            <h1>ZIMAMOTO NA UOKOZI</h1>
+        </div>
     </div>
-        </form> 
-    
-        <img class="tm-logo" src="logo.png" alt="logo zimamoto">
-  </section>
-    <br>
-    
- <footer class="tm-footer">
-        <div class="tm-us">
-        <p class="bold">About Us</p>
-        <p>Sisi ni kikosi cha Zimamoto kinachoshughulikia masuala ya uokozi wa baharini na nchi kavu
-            ,kikosi hiki kilianzishwa na serikali ya mapinduzi ya Zanzibar mwaka 1990.
-        </p>    
-        </div>
-       
-        <div class="tm-address">
-        <p class="bold">Address</p>
-        <p>000, Kilimani, Zanzibar
-            Phone : +255 772530476
-            Email : rauhiaabdallah43@gmail.com</p>    
-        </div>
-        <br/>
-    <div class="tm-media">
-        <a href="#"> <img src="fb.png"></a>
-        <a href="#"> <img src="G.png"> </a>
-        <a href="#"> <img src="twittr.png"> </a>
-        <a href="#">  <img src="insta.png"> </a>
-        
-        </div>
-       
-<!--    <a  href="#top">  <img class="tm-up" src="images/up.png"> </a>-->
-        
-      
-    </footer>
-    
 
-    
-    </body>
-    
+    <!-- RIGHT LOGO -->
+    <div class="right-logo">
+        <img src="logo.png" alt="Zimamoto Logo">
+    </div>
+</header>
+
+
+    <div class="main-container">
+        <!-- Section B: Sidebar Menu -->
+        <nav class="sidebar-section">
+            <ul class="menu">
+                <li class="menu-item">
+                    <a href="index.html" class="menu-link active">
+                        <i class="fas fa-home menu-icon"></i>
+                        <span>Home</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="login1.html" class="menu-link">
+                        <i class="fas fa-chart-bar menu-icon"></i>
+                        <span>Statistics</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="login.html" class="menu-link">
+                        <i class="fas fa-file-alt menu-icon"></i>
+                        <span>Form</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="galaxy.html" class="menu-link">
+                        <i class="fas fa-images"></i>
+                        <span>Galaxy</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <i class="fas fa-info-circle menu-icon"></i>
+                        <span>About Us</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="contact.html" class="menu-link">
+                        <i class="fas fa-address-book menu-icon"></i>
+                        <span>Contact Us</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main content -->
+        <main class="content-section">
+            <!-- Section C: Contact Us (Replaced Slideshow) -->
+            <section class="contact-section">
+                <h2 class="section-title">Contact Us</h2>
+                
+                <div class="contact-container">
+                    <div class="contact-info">
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Our Location</h3>
+                                <p>Zimamoto Headquarters</p>
+                                <p>Kilimani Area, Zanzibar City</p>
+                                <p>Zanzibar, Tanzania</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Phone Numbers</h3>
+                                <p>Emergency: <strong>114</strong></p>
+                                <p>Office: <strong>+255 24 223 0001</strong></p>
+                                <p>Fax: <strong>+255 24 223 0002</strong></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Email Address</h3>
+                                <p>General Inquiries: <strong>info@zimamotoznz.go.tz</strong></p>
+                                <p>Emergency: <strong>emergency@zimamotoznz.go.tz</strong></p>
+                                <p>Support: <strong>support@zimamotoznz.go.tz</strong></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Working Hours</h3>
+                                <p>Emergency Services: <strong>24/7</strong></p>
+                                <p>Office Hours: <strong>Mon-Fri: 8:00 AM - 5:00 PM</strong></p>
+                                <p>Weekends: <strong>Emergency Only</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form">
+                        <h3 style="color: var(--dark-red); margin-bottom: 1rem;">Send Us a Message</h3>
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <select id="subject" name="subject" required>
+                                    <option value="">Select a subject</option>
+                                    <option value="emergency">Emergency Report</option>
+                                    <option value="inspection">Fire Safety Inspection</option>
+                                    <option value="training">Fire Safety Training</option>
+                                    <option value="complaint">Complaint</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" required placeholder="Type your message here..."></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="emergency-box">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Emergency Contact</h3>
+                    <p>For fire emergencies, please call <strong>114</strong> immediately. Do not use this form for emergency situations.</p>
+                    <p>Our emergency response team is available 24/7 to assist you.</p>
+                </div>
+                
+                <div class="map-container">
+                    <div class="map-header">
+                        <h3><i class="fas fa-map-marker-alt"></i> Zimamoto Headquarters, Kilimani - Zanzibar</h3>
+                        <div class="map-links">
+                            <a href="https://www.google.com/maps/dir//Zanzibar+Fire+Department,+Kilimani,+Zanzibar" target="_blank" class="map-link">
+                                <i class="fas fa-directions"></i> Directions
+                            </a>
+                            <a href="https://www.google.com/maps/place/Zanzibar+Fire+Department/@-6.1650,39.2000,17z" target="_blank" class="map-link">
+                                <i class="fas fa-external-link-alt"></i> Open Map
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Google Maps Embed -->
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.247669370926!2d39.197811075005785!3d-6.165020993829289!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185cd059242fbd01%3A0x9a8d6036c7a6f634!2sZanzibar%20Fire%20Department!5e0!3m2!1sen!2stz!4v1647284567890!5m2!1sen!2stz" 
+                        class="map-frame"
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                    <!-- Fallback text for iframes not supported -->
+                    <noscript>
+                        <div style="padding: 2rem; text-align: center; background-color: var(--light-gray);">
+                            <p><strong>Zimamoto Headquarters Location:</strong></p>
+                            <p>Kilimani Area, Zanzibar City, Zanzibar, Tanzania</p>
+                            <p>Coordinates: -6.1650° S, 39.2000° E</p>
+                            <p><a href="https://goo.gl/maps/abcdefg" target="_blank">Open in Google Maps</a></p>
+                        </div>
+                    </noscript>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Section E: Footer -->
+    <footer class="footer-section">
+        <div class="footer-column">
+            <h3>Contact Us</h3>
+            <ul class="contact-info-list">
+                <li>
+                    <i class="fas fa-map-marker-alt footer-icon"></i>
+                    <span>Zimamoto Headquarters, Kilimani, Zanzibar City, Tanzania</span>
+                </li>
+                <li>
+                    <i class="fas fa-phone footer-icon"></i>
+                    <span>Emergency: 114 | Office: +255 24 223 0001</span>
+                </li>
+                <li>
+                    <i class="fas fa-envelope footer-icon"></i>
+                    <span>info@zimamotoznz.go.tz</span>
+                </li>
+                <li>
+                    <i class="fas fa-clock footer-icon"></i>
+                    <span>24/7 Emergency Response</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="footer-column">
+            <h3>Connect With Us</h3>
+            <p>Follow us on social media for safety tips, updates, and community events.</p>
+            <div class="social-links">
+                <a href="#" class="social-icon" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-icon" aria-label="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-icon" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-icon" aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 Zimamoto na Uokozi Department - Zanzibar. All rights reserved. | In case of emergency, dial 114</p>
+        </div>
+    </footer>
+
+    <script>
+        // Contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+            };
+            
+            // Simple validation
+            if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // In a real application, you would send this data to a server
+            // For now, we'll just show a success message
+            alert('Asante kwa ujumbe wako! Tutawasiliana nawe hivi karibuni.');
+            
+            // Reset form
+            document.getElementById('contactForm').reset();
+        });
+        
+        // Initialize map functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a small delay for map to load
+            setTimeout(() => {
+                const mapFrame = document.querySelector('.map-frame');
+                if (mapFrame) {
+                    mapFrame.style.opacity = '1';
+                }
+            }, 500);
+        });
+    </script>
+</body>
 </html>
-    

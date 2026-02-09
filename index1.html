@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takwimu za Ajali</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Section A: Kichwa */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #c0392b;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            flex: 1;
+        }
+
+        .logo {
+            height: 150px;
+            width: 150px;
+            border-radius: 8px;
+            background-color: white;
+            padding: 5px;
+        }
+
+        .header-center {
+            flex: 2;
+            text-align: center;
+        }
+
+        .header-center h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .header-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(20px);
+        }
+
+        .back-btn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        .back-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .date-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .date-selector select {
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            background-color: white;
+            color: #333;
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .date-selector select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Section B: Kadi */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 6px solid #3498db;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        #accidentsCard {
+            border-left-color: #3498db;
+        }
+
+        #lossesCard {
+            border-left-color: #2ecc71;
+        }
+
+        #fatalitiesCard {
+            border-left-color: #e74c3c;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            color: #3498db;
+        }
+
+        #lossesCard .card-icon {
+            color: #2ecc71;
+        }
+
+        #fatalitiesCard .card-icon {
+            color: #e74c3c;
+        }
+
+        .card-content h3 {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+
+        .card-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 5px 0;
+        }
+
+        .card-trend {
+            font-size: 0.9rem;
+            color: #95a5a6;
+        }
+
+        .card-trend span {
+            font-weight: 600;
+        }
+
+        /* Section C: Grafu */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            height: 350px;
+        }
+
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .close-modal:hover {
+            color: #e74c3c;
+        }
+
+        #modalTitle {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        #modalMessage {
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        /* Tabella ya Takwimu */
+        .data-table-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            overflow-x: auto;
+            position: relative;
+            min-height: 300px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .data-table tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.9);
+            width: 100%;
+            border-radius: 12px;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .header-right {
+                align-items: center;
+                width: 100%;
+            }
+            
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .date-selector {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .date-selector select {
+                width: 100%;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+            
+            .header-center h1 {
+                font-size: 1.4rem;
+            }
+            
+            .data-table-container {
+                padding: 15px;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .loading {
+                height: 150px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Section A: Kichwa -->
+    <header class="header">
+        <div class="header-left">
+            <img src="logo.png" alt="Logo" class="logo" id="logo">
+        </div>
+        
+        <div class="header-center">
+            <h1>Takwimu za Ajali</h1>
+        </div>
+        
+        <div class="header-right">
+            <button class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <div class="date-selector">
+                <select id="monthSelect">
+                    <option value="">Chagua Mwezi</option>
+                    <option value="1">Januari</option>
+                    <option value="2">Februari</option>
+                    <option value="3">Machi</option>
+                    <option value="4">Aprili</option>
+                    <option value="5">Mei</option>
+                    <option value="6">Juni</option>
+                    <option value="7">Julai</option>
+                    <option value="8">Agosti</option>
+                    <option value="9">Septemba</option>
+                    <option value="10">Oktoba</option>
+                    <option value="11">Novemba</option>
+                    <option value="12">Desemba</option>
+                </select>
+                
+                <select id="yearSelect">
+                    <option value="">Chagua Mwaka</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section B: Kadi za Takwimu -->
+    <section class="stats-cards">
+        <div class="card" id="accidentsCard">
+            <div class="card-icon">
+                <i class="fas fa-car-crash"></i>
+            </div>
+            <div class="card-content">
+                <h3>Jumla ya Ajali</h3>
+                <p class="card-value" id="totalAccidents">0</p>
+                <p class="card-trend"><span id="accidentTrend">0%</span> kutoka mwezi uliopita</p>
+            </div>
+        </div>
+        
+        <div class="card" id="lossesCard">
+            <div class="card-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="card-content">
+                <h3>Hasara (TZS)</h3>
+                <p class="card-value" id="totalLosses">0</p>
+                <p class="card-trend"><span id="lossTrend">0%</span> kutoka mwezi uliopita</p>
+            </div>
+        </div>
+        
+        <div class="card" id="fatalitiesCard">
+            <div class="card-icon">
+                <i class="fas fa-user-injured"></i>
+            </div>
+            <div class="card-content">
+                <h3>Waliofariki</h3>
+                <p class="card-value" id="totalFatalities">0</p>
+                <p class="card-trend"><span id="fatalityTrend">0%</span> kutoka mwezi uliopita</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section C: Grafu -->
+    <section class="charts-section">
+        <div class="chart-container">
+            <canvas id="accidentsChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="lossesChart"></canvas>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="fatalitiesChart"></canvas>
+        </div>
+    </section>
+
+    <!-- Sehemu ya Jedwali la Data -->
+    <section class="data-table-container">
+        <h2 style="margin-bottom: 20px; color: #2c3e50;">Orodha ya Ajali</h2>
+        <div class="loading" id="tableLoading">
+            <i class="fas fa-spinner"></i> Inapakia data...
+        </div>
+        <table class="data-table" id="dataTable">
+            <thead>
+                <tr>
+                    <th>Tarehe</th>
+                    <th>Aina ya Ajali</th>
+                    <th>Idadi ya Ajali</th>
+                    <th>Hasara (TZS)</th>
+                    <th>Waliofariki</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Data itaongezwa hapa -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Modal ya Ujumbe -->
+    <div class="modal" id="messageModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 id="modalTitle">Ujumbe</h3>
+            <p id="modalMessage">Hakuna ujumbe.</p>
+        </div>
+    </div>
+
+    <script>
+        // Viunganishi vya SheetDB API
+        const SHEETDB_API_URL = 'https://sheetdb.io/api/v1/fexw7po0pcjan';
+        
+        // Vigezo vya chaguo
+        let selectedMonth = '';
+        let selectedYear = '';
+        let allData = [];
+        let processedData = [];
+
+        // Vipengele vya DOM
+        const monthSelect = document.getElementById('monthSelect');
+        const yearSelect = document.getElementById('yearSelect');
+        const backBtn = document.getElementById('backBtn');
+        const tableBody = document.getElementById('tableBody');
+        const dataTable = document.getElementById('dataTable');
+        const tableLoading = document.getElementById('tableLoading');
+
+        // Vipengele vya kadi
+        const totalAccidentsEl = document.getElementById('totalAccidents');
+        const totalLossesEl = document.getElementById('totalLosses');
+        const totalFatalitiesEl = document.getElementById('totalFatalities');
+        const accidentTrendEl = document.getElementById('accidentTrend');
+        const lossTrendEl = document.getElementById('lossTrend');
+        const fatalityTrendEl = document.getElementById('fatalityTrend');
+
+        // Vipengele vya modal
+        const messageModal = document.getElementById('messageModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const closeModal = document.querySelector('.close-modal');
+
+        // Chaguo za grafu
+        let accidentsChart, lossesChart, fatalitiesChart;
+
+        // Inakalia ukisha pakia ukurasa
+        document.addEventListener('DOMContentLoaded', function() {
+            // Weka usikizi wa matukio
+            setUpEventListeners();
+            
+            // Ficha jedwali mwanzo
+            dataTable.style.opacity = '0';
+            dataTable.style.transition = 'opacity 0.5s ease';
+            
+            // Pakia data kutoka Google Sheet
+            fetchData();
+        });
+
+        // Weka usikizi wa matukio
+        function setUpEventListeners() {
+            monthSelect.addEventListener('change', function() {
+                selectedMonth = this.value;
+                updateDisplay();
+            });
+            
+            yearSelect.addEventListener('change', function() {
+                selectedYear = this.value;
+                updateDisplay();
+            });
+            
+            backBtn.addEventListener('click', function() {
+                resetSelections();
+            });
+            
+            // Modal ya ujumbe
+            closeModal.addEventListener('click', function() {
+                messageModal.style.display = 'none';
+            });
+            
+            // Fungua modal ukibonyeza nje ya modal
+            window.addEventListener('click', function(event) {
+                if (event.target === messageModal) {
+                    messageModal.style.display = 'none';
+                }
+            });
+        }
+
+        // Toa onyesho la ujumbe
+        function showMessage(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            messageModal.style.display = 'flex';
+        }
+
+        // Onyesha au ficha loading
+        function showLoading(show) {
+            if (show) {
+                tableLoading.classList.remove('hidden');
+                dataTable.style.opacity = '0.3';
+            } else {
+                tableLoading.classList.add('hidden');
+                dataTable.style.opacity = '1';
+            }
+        }
+
+        // Sasisha onyesho la kitufe cha nyuma
+        function updateBackButton() {
+            if (selectedMonth || selectedYear) {
+                backBtn.classList.add('visible');
+            } else {
+                backBtn.classList.remove('visible');
+            }
+        }
+
+        // Weka upya chaguo
+        function resetSelections() {
+            selectedMonth = '';
+            selectedYear = '';
+            monthSelect.value = '';
+            yearSelect.value = '';
+            updateDisplay();
+            showMessage('DONE', 'Click x to remove this message...');
+        }
+
+        // Pakia data kutoka Google Sheet kupitia SheetDB API
+        async function fetchData() {
+            try {
+                // Onyesha loading
+                showLoading(true);
+                
+                const response = await fetch(SHEETDB_API_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`Hitilafu ya mtandao: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                allData = data;
+                
+                // Tengeneza data kwa ajili ya uchambuzi
+                processData(data);
+                
+                // Jaza chaguo za mwaka
+                populateYearOptions();
+                
+                // Weka onyesho la kwanza
+                updateDisplay();
+                
+                // Ficha loading baada ya muda mfupi
+                setTimeout(() => {
+                    showLoading(false);
+                }, 500);
+                
+            } catch (error) {
+                console.error('Hitilafu ya kupakia data:', error);
+                
+                // Tumia data ya mfano kwa ajili ya majaribio
+                allData = generateSampleData();
+                processData(allData);
+                populateYearOptions();
+                updateDisplay();
+                
+                // Ficha loading
+                setTimeout(() => {
+                    showLoading(false);
+                }, 500);
+                
+                showMessage('Hitilafu', `Hitilafu ilitokea wakati wa kupakia data: ${error.message}. Data ya mfano imetumika.`);
+            }
+        }
+
+        // Tengeneza data kwa ajili ya uchambuzi
+        function processData(data) {
+            processedData = data.map(item => {
+                // Pata tarehe kutoka kwa MWEZI au MWAKA
+                let dateStr = item.MWEZI || item.MWAKA || '';
+                let date = new Date(dateStr);
+                
+                // Pata mwezi na mwaka
+                let month = date.getMonth() + 1; // getMonth() anarudi 0-11
+                let year = date.getFullYear();
+                
+                // Tengeneza idadi ya ajali
+                let ajaliCount = parseInt(item['IDADI YA AJALI'] || '0');
+                
+                // Tengeneza hasara (ondoa comma na badge nafasi)
+                let hasaraStr = item.HASARA || '0';
+                if (hasaraStr === '-' || hasaraStr === '') hasaraStr = '0';
+                let hasara = parseFloat(hasaraStr.replace(/,/g, ''));
+                
+                // Tengeneza idadi ya waliofariki
+                let waliofariki = parseInt(item.WALIOFARIKI || '0');
+                
+                return {
+                    tarehe: dateStr,
+                    mwezi: month,
+                    mwaka: year,
+                    ainaYaAjali: item['AINA YA AJALI'] || '',
+                    idadiYaAjali: ajaliCount,
+                    hasara: hasara,
+                    waliofariki: waliofariki,
+                    mweziJina: getMonthName(month)
+                };
+            });
+        }
+
+        // Jaza chaguo za mwaka kutoka kwenye data
+        function populateYearOptions() {
+            // Pata miaka yote tofauti kutoka kwenye data
+            const years = [...new Set(processedData.map(item => item.mwaka))].sort((a, b) => b - a);
+            
+            // Ongeza chaguo za mwaka
+            yearSelect.innerHTML = '<option value="">Chagua Mwaka</option>';
+            years.forEach(year => {
+                if (year && year !== 1970) { // Zuia mwaka 1970 (invalid date)
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearSelect.appendChild(option);
+                }
+            });
+        }
+
+        // Sasisha onyesho kulingana na chaguo
+        function updateDisplay() {
+            // Sasisha kitufe cha nyuma
+            updateBackButton();
+            
+            // Onyesha loading kidogo wakati inasasisha
+            showLoading(true);
+            
+            // Tumia setTimeout ili kutoa muda wa kuona loading
+            setTimeout(() => {
+                // Pata data iliyochaguliwa
+                const filteredData = filterData();
+                
+                // Sasisha jedwali
+                updateTable(filteredData);
+                
+                // Hesabu jumla
+                const totals = calculateTotals(filteredData);
+                
+                // Sasisha kadi
+                updateCards(totals);
+                
+                // Sasisha grafu
+                updateCharts(filteredData);
+                
+                // Ficha loading
+                showLoading(false);
+            }, 300);
+        }
+
+        // Sasisha jedwali la data
+        function updateTable(data) {
+            // Futa yaliyopo
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="5" style="text-align: center; padding: 40px; color: #95a5a6;">
+                        <i class="fas fa-database" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                        Hakuna data iliyopatikana kwa chaguo lako
+                    </td>
+                `;
+                tableBody.appendChild(emptyRow);
+                return;
+            }
+            
+            // Ongeza safu mpya
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Tengeneza hasara kwa muundo wa pesa
+                const hasaraFormatted = item.hasara > 0 
+                    ? item.hasara.toLocaleString('en-TZ', { minimumFractionDigits: 2 })
+                    : '-';
+                
+                row.innerHTML = `
+                    <td>${item.tarehe || '-'}</td>
+                    <td>${item.ainaYaAjali || '-'}</td>
+                    <td>${item.idadiYaAjali || 0}</td>
+                    <td>${hasaraFormatted}</td>
+                    <td>${item.waliofariki || 0}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+            
+            // Onyesha jumla ya safu
+            const totalRow = document.createElement('tr');
+            totalRow.style.fontWeight = 'bold';
+            totalRow.style.backgroundColor = '#f8f9fa';
+            
+            const totals = calculateTotals(data);
+            const hasaraFormatted = totals.totalLosses > 0 
+                ? totals.totalLosses.toLocaleString('en-TZ', { minimumFractionDigits: 2 })
+                : '-';
+            
+            totalRow.innerHTML = `
+                <td colspan="2">JUMLA</td>
+                <td>${totals.totalAccidents}</td>
+                <td>${hasaraFormatted}</td>
+                <td>${totals.totalFatalities}</td>
+            `;
+            
+            tableBody.appendChild(totalRow);
+        }
+
+        // Chuja data kulingana na chaguo
+        function filterData() {
+            if (!selectedMonth && !selectedYear) {
+                return processedData;
+            }
+            
+            return processedData.filter(item => {
+                let monthMatch = true;
+                let yearMatch = true;
+                
+                if (selectedMonth) {
+                    monthMatch = String(item.mwezi) === selectedMonth;
+                }
+                
+                if (selectedYear) {
+                    yearMatch = String(item.mwaka) === selectedYear;
+                }
+                
+                return monthMatch && yearMatch;
+            });
+        }
+
+        // Hesabu jumla za data
+        function calculateTotals(data) {
+            let totalAccidents = 0;
+            let totalLosses = 0;
+            let totalFatalities = 0;
+            
+            data.forEach(item => {
+                totalAccidents += item.idadiYaAjali || 0;
+                totalLosses += item.hasara || 0;
+                totalFatalities += item.waliofariki || 0;
+            });
+            
+            // Hesabu mabadiliko (ya mfano tu)
+            const accidentTrend = calculateTrend(totalAccidents);
+            const lossTrend = calculateTrend(totalLosses);
+            const fatalityTrend = calculateTrend(totalFatalities);
+            
+            return {
+                totalAccidents,
+                totalLosses,
+                totalFatalities,
+                accidentTrend,
+                lossTrend,
+                fatalityTrend
+            };
+        }
+
+        // Hesabu mabadiliko (ya mfano)
+        function calculateTrend(value) {
+            // Katika mfumo halisi, hii itakuwa kulinganisha na data ya mwezi uliopita
+            const randomTrend = Math.floor(Math.random() * 21) - 10; // -10% hadi +10%
+            return randomTrend;
+        }
+
+        // Sasisha kadi
+        function updateCards(totals) {
+            // Format nambari
+            const formattedAccidents = totals.totalAccidents.toLocaleString();
+            const formattedLosses = totals.totalLosses > 0 
+                ? totals.totalLosses.toLocaleString('en-TZ', {
+                    style: 'currency',
+                    currency: 'TZS',
+                    minimumFractionDigits: 0
+                })
+                : 'TZS 0';
+            const formattedFatalities = totals.totalFatalities.toLocaleString();
+            
+            // Sasisha maadili
+            totalAccidentsEl.textContent = formattedAccidents;
+            totalLossesEl.textContent = formattedLosses;
+            totalFatalitiesEl.textContent = formattedFatalities;
+            
+            // Sasisha mabadiliko
+            accidentTrendEl.textContent = `${totals.accidentTrend > 0 ? '+' : ''}${totals.accidentTrend}%`;
+            lossTrendEl.textContent = `${totals.lossTrend > 0 ? '+' : ''}${totals.lossTrend}%`;
+            fatalityTrendEl.textContent = `${totals.fatalityTrend > 0 ? '+' : ''}${totals.fatalityTrend}%`;
+            
+            // Badilisha rangi ya mabadiliko
+            updateTrendColor(accidentTrendEl, totals.accidentTrend);
+            updateTrendColor(lossTrendEl, totals.lossTrend);
+            updateTrendColor(fatalityTrendEl, totals.fatalityTrend);
+        }
+
+        // Badilisha rangi ya mabadiliko
+        function updateTrendColor(element, trend) {
+            if (trend > 0) {
+                element.style.color = '#e74c3c'; // Nyekundu kwa ongezeko
+            } else if (trend < 0) {
+                element.style.color = '#2ecc71'; // Kijani kwa kupungua
+            } else {
+                element.style.color = '#f39c12'; // Manjano kwa hakuna mabadiliko
+            }
+        }
+
+        // Sasisha grafu
+        function updateCharts(data) {
+            // Panga data kwa grafu
+            const chartData = prepareChartData(data);
+            
+            // Unda au sasisha grafu
+            createOrUpdateChart('accidentsChart', 'Ajali', chartData.labels, chartData.accidents, '#3498db');
+            createOrUpdateChart('lossesChart', 'Hasara (TZS)', chartData.labels, chartData.losses, '#2ecc71');
+            createOrUpdateChart('fatalitiesChart', 'Waliofariki', chartData.labels, chartData.fatalities, '#e74c3c');
+        }
+
+        // Panga data kwa grafu
+        function prepareChartData(data) {
+            if (data.length === 0) {
+                return {
+                    labels: ['Hakuna Data'],
+                    accidents: [0],
+                    losses: [0],
+                    fatalities: [0]
+                };
+            }
+            
+            // Kama imechaguliwa mwezi mmoja tu, ongeza kwa aina ya ajali
+            if (selectedMonth && selectedYear) {
+                return prepareDataByAccidentType(data);
+            }
+            
+            // Kama imechaguliwa mwaka mmoja, ongeza kwa miezi
+            if (selectedYear && !selectedMonth) {
+                return prepareDataByMonth(data, selectedYear);
+            }
+            
+            // Kama hakuna chaguo, ongeza kwa miaka
+            return prepareDataByYear(data);
+        }
+
+        // Panga data kwa mujibu wa aina ya ajali
+        function prepareDataByAccidentType(data) {
+            const accidentTypes = {};
+            
+            data.forEach(item => {
+                const type = item.ainaYaAjali || 'Nyingine';
+                if (!accidentTypes[type]) {
+                    accidentTypes[type] = {
+                        accidents: 0,
+                        losses: 0,
+                        fatalities: 0
+                    };
+                }
+                
+                accidentTypes[type].accidents += item.idadiYaAjali || 0;
+                accidentTypes[type].losses += item.hasara || 0;
+                accidentTypes[type].fatalities += item.waliofariki || 0;
+            });
+            
+            const labels = Object.keys(accidentTypes);
+            const accidents = labels.map(type => accidentTypes[type].accidents);
+            const losses = labels.map(type => accidentTypes[type].losses);
+            const fatalities = labels.map(type => accidentTypes[type].fatalities);
+            
+            return { labels, accidents, losses, fatalities };
+        }
+
+        // Panga data kwa mujibu wa miezi
+        function prepareDataByMonth(data, year) {
+            // Tengeneza miezi 12
+            const monthsData = {};
+            for (let i = 1; i <= 12; i++) {
+                monthsData[i] = {
+                    accidents: 0,
+                    losses: 0,
+                    fatalities: 0
+                };
+            }
+            
+            data.forEach(item => {
+                if (item.mwaka == year) {
+                    const month = item.mwezi;
+                    monthsData[month].accidents += item.idadiYaAjali || 0;
+                    monthsData[month].losses += item.hasara || 0;
+                    monthsData[month].fatalities += item.waliofariki || 0;
+                }
+            });
+            
+            const labels = Array.from({length: 12}, (_, i) => getMonthName(i + 1));
+            const accidents = Array.from({length: 12}, (_, i) => monthsData[i + 1].accidents);
+            const losses = Array.from({length: 12}, (_, i) => monthsData[i + 1].losses);
+            const fatalities = Array.from({length: 12}, (_, i) => monthsData[i + 1].fatalities);
+            
+            return { labels, accidents, losses, fatalities };
+        }
+
+        // Panga data kwa mujibu wa miaka
+        function prepareDataByYear(data) {
+            const yearsData = {};
+            
+            data.forEach(item => {
+                const year = item.mwaka;
+                if (!yearsData[year]) {
+                    yearsData[year] = {
+                        accidents: 0,
+                        losses: 0,
+                        fatalities: 0
+                    };
+                }
+                
+                yearsData[year].accidents += item.idadiYaAjali || 0;
+                yearsData[year].losses += item.hasara || 0;
+                yearsData[year].fatalities += item.waliofariki || 0;
+            });
+            
+            const labels = Object.keys(yearsData).sort();
+            const accidents = labels.map(year => yearsData[year].accidents);
+            const losses = labels.map(year => yearsData[year].losses);
+            const fatalities = labels.map(year => yearsData[year].fatalities);
+            
+            return { labels, accidents, losses, fatalities };
+        }
+
+        // Pata jina la mwezi kutoka kwa nambari
+        function getMonthName(monthNum) {
+            const months = [
+                'Januari', 'Februari', 'Machi', 'Aprili', 'Mei', 'Juni',
+                'Julai', 'Agosti', 'Septemba', 'Oktoba', 'Novemba', 'Desemba'
+            ];
+            
+            if (monthNum >= 1 && monthNum <= 12) {
+                return months[monthNum - 1];
+            }
+            
+            return 'Mwezi';
+        }
+
+        // Unda au sasisha grafu
+        function createOrUpdateChart(canvasId, label, labels, data, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            // Ufunguo wa chati
+            const chartKey = `${canvasId}Chart`;
+            
+            // Ikiwa chati ipo tayari, isasishwe
+            if (window[chartKey]) {
+                window[chartKey].data.labels = labels;
+                window[chartKey].data.datasets[0].data = data;
+                window[chartKey].update();
+                return;
+            }
+            
+            // Amua aina ya grafu kulingana na idadi ya data
+            const chartType = labels.length > 6 ? 'line' : 'bar';
+            
+            // Vinginevyo unda chati mpya
+            window[chartKey] = new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        backgroundColor: chartType === 'bar' ? color + '80' : 'transparent',
+                        borderColor: color,
+                        borderWidth: 3,
+                        fill: chartType === 'line',
+                        tension: 0.4,
+                        pointBackgroundColor: color,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    if (label.includes('Hasara')) {
+                                        return 'TZS ' + value.toLocaleString();
+                                    }
+                                    return value;
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.dataset.label.includes('Hasara')) {
+                                        label += 'TZS ' + context.parsed.y.toLocaleString();
+                                    } else {
+                                        label += context.parsed.y;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Toa data ya mfano kwa ajili ya majaribio
+        function generateSampleData() {
+            const sampleData = [];
+            const accidentTypes = [
+                'AJALI ZA GARI/MOTO WA GARI/PIKIPIKI',
+                'KUUNGUNA NYUMBA NA MAJENGO YA TAASISI',
+                'MOTO WA TRANSFOMA NA NGUZO ZA UMEME',
+                'MOTO WA MISITU SHAMBA',
+                'MOTO WA SEHEMU ZA BIASHARA MASOKO/MADUKA',
+                'WATU NA WANYAMA WALIONIGA VISIMANI/MASHIMONI/MABWAWA/MITO/NA KUZAMA BAHARINI'
+            ];
+            
+            const years = [2024, 2025];
+            
+            years.forEach(year => {
+                for (let month = 1; month <= 3; month++) {
+                    for (let i = 0; i < 3; i++) {
+                        const day = Math.floor(Math.random() * 28) + 1;
+                        const dateStr = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                        const accidentType = accidentTypes[Math.floor(Math.random() * accidentTypes.length)];
+                        
+                        sampleData.push({
+                            'MWEZI': dateStr,
+                            'MWAKA': dateStr,
+                            'AINA YA AJALI': accidentType,
+                            'IDADI YA AJALI': Math.floor(Math.random() * 3) + 1,
+                            'HASARA': Math.random() > 0.5 ? (Math.floor(Math.random() * 1000000) + 10000).toLocaleString('en-TZ', {minimumFractionDigits: 2}) : '-',
+                            'WALIOFARIKI': Math.random() > 0.7 ? Math.floor(Math.random() * 3) + 1 : '0'
+                        });
+                    }
+                }
+            });
+            
+            return sampleData;
+        }
+    </script>
+</body>
+</html>
